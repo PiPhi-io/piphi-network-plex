@@ -53,7 +53,10 @@ jobs:
         run: git diff --exit-code -- manifest.json widgets
       - run: npm run validate:widgets
       - run: npm test
-      - run: python -m pytest -q
+      - name: Test installed runtime with release widget assets
+        env:
+          PIPHI_WIDGETS_PATH: ${{ github.workspace }}/widgets
+        run: python -m pytest -q
       - run: python scripts/validate.py
       - name: Verify tagged release and catalog consistency
         env:
