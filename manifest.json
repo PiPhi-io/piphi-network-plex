@@ -1,0 +1,606 @@
+{
+  "$schema": "./schema/piphi-manifest.schema.json",
+  "manifest_version": "1.0",
+  "id": "piphi-network-plex",
+  "name": "Plex Media Server",
+  "version": "0.1.0",
+  "description": "Browse and control one or more Plex Media Servers through PiPhi Network.",
+  "metadata": {
+    "generator": "piphi-network-create",
+    "scaffold_version": "0.3.0",
+    "preset": "cloud-polling-api",
+    "domain": "local-device",
+    "upstream_api_status": "plex-media-server-http-api"
+  },
+  "maintainer": {
+    "name": "PiPhi Network",
+    "website": "https://piphi.io"
+  },
+  "marketplace": {
+    "changelog_url": "https://github.com/PiPhi-io/piphi-network-plex/releases",
+    "quality_tier": "unrated",
+    "governance": {
+      "schema_version": 1,
+      "publication_status": "draft",
+      "rollout_percent": 0,
+      "lifecycle_status": "active",
+      "qualification": {
+        "status": "unverified"
+      }
+    },
+    "metadata_version": 2,
+    "display_name": "Plex Media Server",
+    "summary": "Browse Plex libraries and use Plex media, servers, and players in PiPhi dashboards.",
+    "category": "media",
+    "device_types": [
+      "media_server",
+      "media_player"
+    ],
+    "protocols": [
+      "http",
+      "https",
+      "plex_media_server_api"
+    ],
+    "regions": [
+      "WW"
+    ],
+    "languages": [
+      "en"
+    ],
+    "discovery_methods": [
+      "account",
+      "manual"
+    ],
+    "connectivity": "hybrid",
+    "offline_support": "partial",
+    "privacy_url": "https://www.plex.tv/about/privacy-legal/",
+    "publisher": {
+      "name": "PiPhi Network",
+      "website_url": "https://piphi.io",
+      "support_url": "https://github.com/PiPhi-io/piphi-network-plex/issues",
+      "security_contact": "support@piphi.io"
+    },
+    "access": [
+      {
+        "id": "plex_account",
+        "label": "Plex account access",
+        "reason": "Discovers the Plex servers available to the configured account.",
+        "required": true
+      },
+      {
+        "id": "local_network",
+        "label": "Local network access",
+        "reason": "Connects directly to local Plex Media Servers when available.",
+        "required": true
+      }
+    ],
+    "compatibility": [
+      {
+        "brand": "Plex",
+        "model": "Plex Media Server",
+        "regions": [
+          "WW"
+        ]
+      }
+    ],
+    "documentation_url": "https://github.com/PiPhi-io/piphi-network-plex",
+    "support_url": "https://github.com/PiPhi-io/piphi-network-plex/issues"
+  },
+  "license": "Apache-2.0",
+  "image": "docker.io/piphinetwork/piphi-network-plex:0.1.0",
+  "platforms": [
+    "linux"
+  ],
+  "runtime": {
+    "linux": {
+      "type": "container",
+      "container": {
+        "image": "docker.io/piphinetwork/piphi-network-plex:0.1.0",
+        "ports": [
+          {
+            "container": 8091,
+            "host": 8091
+          }
+        ],
+        "environment": {
+          "LOG_LEVEL": "info"
+        },
+        "restart_policy": {
+          "name": "unless-stopped",
+          "maximum_retry_count": 0
+        }
+      },
+      "discovery": {
+        "method": "account"
+      }
+    }
+  },
+  "api": {
+    "required": [
+      "health",
+      "entities",
+      "command",
+      "config",
+      "ui_config"
+    ],
+    "endpoints": {
+      "health": "/health",
+      "diagnostics": "/diagnostics",
+      "discover": "/discover",
+      "entities": "/entities",
+      "state": "/state",
+      "config": "/config",
+      "config_sync": "/config/sync",
+      "deconfigure": "/deconfigure",
+      "ui_config": "/ui-config",
+      "events": "/events",
+      "command": "/command",
+      "provider_instances": "/provider/instances",
+      "provider_collections": "/provider/{instance_id}/collections",
+      "provider_items": "/provider/{instance_id}/items",
+      "provider_resolve": "/provider/{instance_id}/resolve",
+      "provider_actions": "/provider/{instance_id}/actions"
+    }
+  },
+  "config": {
+    "source": "endpoint",
+    "endpoint": "/ui-config",
+    "required": true,
+    "editable_fields": [
+      "host",
+      "alias",
+      "base_url",
+      "token",
+      "poll_interval_seconds",
+      "include_remote_servers"
+    ],
+    "runtime_fields": [
+      "id",
+      "config_id",
+      "container_id",
+      "device_id"
+    ],
+    "identity_fields": [
+      "token",
+      "base_url"
+    ]
+  },
+  "identity": {
+    "fields": [
+      "token",
+      "base_url"
+    ]
+  },
+  "capabilities": {
+    "connected": {
+      "kind": "sensor",
+      "unit": "bool"
+    },
+    "server_count": {
+      "kind": "sensor",
+      "unit": "servers"
+    },
+    "active_sessions": {
+      "kind": "sensor",
+      "unit": "sessions"
+    },
+    "transcode_sessions": {
+      "kind": "sensor",
+      "unit": "sessions"
+    },
+    "refresh": {
+      "kind": "action"
+    }
+  },
+  "commands": {
+    "refresh": {
+      "description": "Refresh Plex servers and state.",
+      "timeout_ms": 15000
+    }
+  },
+  "entities": [
+    {
+      "id": "plex-server",
+      "name": "Plex Media Server",
+      "device_id": "plex-server",
+      "device_class": "media_server",
+      "entity_type": "media_library",
+      "capabilities": [
+        "connected",
+        "server_count",
+        "active_sessions",
+        "transcode_sessions",
+        "refresh"
+      ],
+      "available_commands": [
+        {
+          "id": "refresh",
+          "label": "Refresh",
+          "kind": "action"
+        }
+      ],
+      "dashboard": {
+        "allowed_widgets": [
+          "tile",
+          "stat",
+          "button",
+          "external-widget"
+        ],
+        "default_widget": "tile",
+        "recommended_widgets": [
+          "external-widget"
+        ]
+      }
+    }
+  ],
+  "ui": {
+    "widget_packages": [
+      {
+        "id": "io.piphi.plex.server-overview",
+        "name": "Plex server overview",
+        "version": "0.1.0",
+        "entry": "/widgets/plex-server-overview/dist/widget.js",
+        "runtime": "prebuilt_bundle",
+        "host_bridge": {
+          "protocol": "piphi.widget.host",
+          "version": "1",
+          "events": [
+            "ready",
+            "resize"
+          ]
+        },
+        "binding_modes": [
+          "read",
+          "write",
+          "read-write"
+        ],
+        "value_kinds": [
+          "numeric",
+          "boolean",
+          "command"
+        ],
+        "settings_schema_version": "1",
+        "settings": [
+          {
+            "id": "title",
+            "type": "text",
+            "label": "Title",
+            "default": "Plex servers"
+          }
+        ],
+        "capability_requirements": [
+          "connected",
+          "server_count",
+          "active_sessions",
+          "transcode_sessions"
+        ],
+        "layout": {
+          "min_height": 190,
+          "default_height": 240,
+          "max_height": 360
+        },
+        "security": {
+          "permissions": [
+            "host.executeCommand"
+          ],
+          "allowed_commands": [
+            "refresh"
+          ],
+          "sandbox": [
+            "allow-scripts"
+          ],
+          "csp": {
+            "connect_src": []
+          }
+        }
+      },
+      {
+        "id": "io.piphi.plex.recently-added",
+        "name": "Recently Added",
+        "version": "0.1.0",
+        "entry": "/media/providers/plex/widgets/recently-added/widget.js",
+        "integrity": "sha384-viY/LpSOCMpTiyqRsDposVIRwQEsVD1I3GCb2g85IPHnlx4aWsEDGunk1c9QNzFn",
+        "binding_modes": [
+          "read"
+        ],
+        "value_kinds": [
+          "json"
+        ],
+        "capability_requirements": [],
+        "sdk_compatibility": {
+          "minimum": "0.3.0"
+        },
+        "settings_schema_version": "1",
+        "conformance": {
+          "accessibility": "wcag2.2-aa",
+          "keyboard": true,
+          "themes": [
+            "light",
+            "dark"
+          ],
+          "directions": [
+            "ltr",
+            "rtl"
+          ],
+          "states": [
+            "loading",
+            "live",
+            "stale",
+            "offline",
+            "reconnecting",
+            "denied",
+            "error"
+          ]
+        },
+        "previews": {
+          "light": "/media/providers/plex/widgets/recently-added/preview-light.svg",
+          "dark": "/media/providers/plex/widgets/recently-added/preview-dark.svg"
+        },
+        "settings": [
+          {
+            "id": "title",
+            "type": "text",
+            "label": "Title",
+            "default": "Recently Added"
+          },
+          {
+            "id": "limit",
+            "type": "number",
+            "label": "Items (1–24)",
+            "default": 8
+          },
+          {
+            "id": "refreshSeconds",
+            "type": "number",
+            "label": "Refresh seconds (15–300)",
+            "default": 60
+          },
+          {
+            "id": "showSummary",
+            "type": "boolean",
+            "label": "Show summaries",
+            "default": true
+          }
+        ],
+        "layout": {
+          "min_height": 240,
+          "default_height": 440,
+          "max_height": 800
+        },
+        "security": {
+          "permissions": [
+            "host.queryMedia"
+          ],
+          "sandbox": [
+            "allow-scripts"
+          ],
+          "csp": {
+            "connect_src": []
+          }
+        },
+        "runtime": "prebuilt_bundle",
+        "host_bridge": {
+          "protocol": "piphi.widget.host",
+          "version": "1",
+          "events": [
+            "ready",
+            "resize"
+          ]
+        }
+      },
+      {
+        "id": "io.piphi.plex.continue-watching",
+        "name": "Continue Watching",
+        "version": "0.1.0",
+        "entry": "/media/providers/plex/widgets/continue-watching/widget.js",
+        "integrity": "sha384-viY/LpSOCMpTiyqRsDposVIRwQEsVD1I3GCb2g85IPHnlx4aWsEDGunk1c9QNzFn",
+        "binding_modes": [
+          "read"
+        ],
+        "value_kinds": [
+          "json"
+        ],
+        "capability_requirements": [],
+        "sdk_compatibility": {
+          "minimum": "0.3.0"
+        },
+        "settings_schema_version": "1",
+        "conformance": {
+          "accessibility": "wcag2.2-aa",
+          "keyboard": true,
+          "themes": [
+            "light",
+            "dark"
+          ],
+          "directions": [
+            "ltr",
+            "rtl"
+          ],
+          "states": [
+            "loading",
+            "live",
+            "stale",
+            "offline",
+            "reconnecting",
+            "denied",
+            "error"
+          ]
+        },
+        "previews": {
+          "light": "/media/providers/plex/widgets/continue-watching/preview-light.svg",
+          "dark": "/media/providers/plex/widgets/continue-watching/preview-dark.svg"
+        },
+        "settings": [
+          {
+            "id": "title",
+            "type": "text",
+            "label": "Title",
+            "default": "Continue Watching"
+          },
+          {
+            "id": "limit",
+            "type": "number",
+            "label": "Items (1–24)",
+            "default": 8
+          },
+          {
+            "id": "refreshSeconds",
+            "type": "number",
+            "label": "Refresh seconds (15–300)",
+            "default": 60
+          },
+          {
+            "id": "showSummary",
+            "type": "boolean",
+            "label": "Show summaries",
+            "default": true
+          }
+        ],
+        "layout": {
+          "min_height": 240,
+          "default_height": 440,
+          "max_height": 800
+        },
+        "security": {
+          "permissions": [
+            "host.queryMedia"
+          ],
+          "sandbox": [
+            "allow-scripts"
+          ],
+          "csp": {
+            "connect_src": []
+          }
+        },
+        "runtime": "prebuilt_bundle",
+        "host_bridge": {
+          "protocol": "piphi.widget.host",
+          "version": "1",
+          "events": [
+            "ready",
+            "resize"
+          ]
+        }
+      },
+      {
+        "id": "io.piphi.plex.library-search",
+        "name": "Plex Search / Library",
+        "version": "0.1.0",
+        "entry": "/media/providers/plex/widgets/library-search/widget.js",
+        "integrity": "sha384-viY/LpSOCMpTiyqRsDposVIRwQEsVD1I3GCb2g85IPHnlx4aWsEDGunk1c9QNzFn",
+        "binding_modes": [
+          "read"
+        ],
+        "value_kinds": [
+          "json"
+        ],
+        "capability_requirements": [],
+        "sdk_compatibility": {
+          "minimum": "0.3.0"
+        },
+        "settings_schema_version": "1",
+        "conformance": {
+          "accessibility": "wcag2.2-aa",
+          "keyboard": true,
+          "themes": [
+            "light",
+            "dark"
+          ],
+          "directions": [
+            "ltr",
+            "rtl"
+          ],
+          "states": [
+            "loading",
+            "live",
+            "stale",
+            "offline",
+            "reconnecting",
+            "denied",
+            "error"
+          ]
+        },
+        "previews": {
+          "light": "/media/providers/plex/widgets/library-search/preview-light.svg",
+          "dark": "/media/providers/plex/widgets/library-search/preview-dark.svg"
+        },
+        "settings": [
+          {
+            "id": "title",
+            "type": "text",
+            "label": "Title",
+            "default": "Plex Search / Library"
+          },
+          {
+            "id": "limit",
+            "type": "number",
+            "label": "Items (1–24)",
+            "default": 8
+          },
+          {
+            "id": "refreshSeconds",
+            "type": "number",
+            "label": "Refresh seconds (15–300)",
+            "default": 60
+          },
+          {
+            "id": "showSummary",
+            "type": "boolean",
+            "label": "Show summaries",
+            "default": true
+          },
+          {
+            "id": "query",
+            "type": "text",
+            "label": "Search query (all server libraries)",
+            "default": ""
+          },
+          {
+            "id": "collectionId",
+            "type": "text",
+            "label": "Library ID (used when query is empty)",
+            "default": ""
+          }
+        ],
+        "layout": {
+          "min_height": 240,
+          "default_height": 440,
+          "max_height": 800
+        },
+        "security": {
+          "permissions": [
+            "host.queryMedia"
+          ],
+          "sandbox": [
+            "allow-scripts"
+          ],
+          "csp": {
+            "connect_src": []
+          }
+        },
+        "runtime": "prebuilt_bundle",
+        "host_bridge": {
+          "protocol": "piphi.widget.host",
+          "version": "1",
+          "events": [
+            "ready",
+            "resize"
+          ]
+        }
+      }
+    ]
+  },
+  "media_provider": {
+    "id": "plex",
+    "label": "Plex",
+    "instances_endpoint": "/provider/instances",
+    "supports_search": true,
+    "supports_browse": true,
+    "supports_collections": true,
+    "supports_video": true,
+    "supports_images": true,
+    "supports_queue": true,
+    "supports_upload": false,
+    "supports_mutation": true
+  }
+}

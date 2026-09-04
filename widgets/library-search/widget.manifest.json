@@ -1,0 +1,97 @@
+{
+  "id": "io.piphi.plex.library-search",
+  "name": "Plex Search / Library",
+  "version": "0.1.0",
+  "entry": "./dist/widget.js",
+  "integrity": "sha384-viY/LpSOCMpTiyqRsDposVIRwQEsVD1I3GCb2g85IPHnlx4aWsEDGunk1c9QNzFn",
+  "binding_modes": [
+    "read"
+  ],
+  "value_kinds": [
+    "json"
+  ],
+  "capability_requirements": [],
+  "sdk_compatibility": {
+    "minimum": "0.3.0"
+  },
+  "settings_schema_version": "1",
+  "conformance": {
+    "accessibility": "wcag2.2-aa",
+    "keyboard": true,
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "directions": [
+      "ltr",
+      "rtl"
+    ],
+    "states": [
+      "loading",
+      "live",
+      "stale",
+      "offline",
+      "reconnecting",
+      "denied",
+      "error"
+    ]
+  },
+  "previews": {
+    "light": "./preview-light.svg",
+    "dark": "./preview-dark.svg"
+  },
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title",
+      "default": "Plex Search / Library"
+    },
+    {
+      "id": "limit",
+      "type": "number",
+      "label": "Items (1–24)",
+      "default": 8
+    },
+    {
+      "id": "refreshSeconds",
+      "type": "number",
+      "label": "Refresh seconds (15–300)",
+      "default": 60
+    },
+    {
+      "id": "showSummary",
+      "type": "boolean",
+      "label": "Show summaries",
+      "default": true
+    },
+    {
+      "id": "query",
+      "type": "text",
+      "label": "Search query (all server libraries)",
+      "default": ""
+    },
+    {
+      "id": "collectionId",
+      "type": "text",
+      "label": "Library ID (used when query is empty)",
+      "default": ""
+    }
+  ],
+  "layout": {
+    "min_height": 240,
+    "default_height": 440,
+    "max_height": 800
+  },
+  "security": {
+    "permissions": [
+      "host.queryMedia"
+    ],
+    "sandbox": [
+      "allow-scripts"
+    ],
+    "csp": {
+      "connect_src": []
+    }
+  }
+}

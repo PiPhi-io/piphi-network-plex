@@ -1,0 +1,14 @@
+{
+  "id": "io.piphi.plex.server-overview",
+  "name": "Plex server overview",
+  "version": "0.1.0",
+  "entry": "./dist/widget.js",
+  "binding_modes": ["read", "write", "read-write"],
+  "value_kinds": ["numeric", "boolean", "command"],
+  "capability_requirements": ["connected", "server_count", "active_sessions", "transcode_sessions"],
+  "sdk_compatibility": {"minimum": "0.3.0"},
+  "settings_schema_version": "1",
+  "settings": [{"id": "title", "type": "text", "label": "Title", "default": "Plex servers"}],
+  "layout": {"min_height": 190, "default_height": 240, "max_height": 360},
+  "security": {"permissions": ["host.executeCommand"], "allowed_commands": ["refresh"], "sandbox": ["allow-scripts"], "csp": {"connect_src": []}}
+}
