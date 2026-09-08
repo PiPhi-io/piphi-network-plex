@@ -24,7 +24,7 @@ for (const [slug, name] of packages) {
     id: `io.piphi.plex.${slug}`, name, version: "0.1.0", entry: "./dist/widget.js",
     integrity: `sha384-${createHash("sha384").update(bytes).digest("base64")}`,
     binding_modes: ["read"], value_kinds: ["json"], capability_requirements: [],
-    sdk_compatibility: { minimum: "0.3.0" }, settings_schema_version: "1",
+    sdk_compatibility: { minimum: "0.5.0" }, settings_schema_version: "1",
     conformance: { accessibility: "wcag2.2-aa", keyboard: true, themes: ["light", "dark"], directions: ["ltr", "rtl"],
       states: ["loading", "live", "stale", "offline", "reconnecting", "denied", "error"] },
     previews: { light: "./preview-light.svg", dark: "./preview-dark.svg" },

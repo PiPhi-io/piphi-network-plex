@@ -7,5 +7,8 @@
     "test": "node --test tests/*.test.mjs",
     "validate:widgets": "piphi-widget validate widgets/recently-added/widget.manifest.json && piphi-widget validate widgets/continue-watching/widget.manifest.json && piphi-widget validate widgets/library-search/widget.manifest.json"
   },
-  "devDependencies": { "esbuild": "0.25.12", "piphi-network-widget-sdk": "0.3.0" }
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "piphi-network-widget-sdk": "0.5.0"
+  }
 }

@@ -84,7 +84,7 @@ node --test tests/plex_widget.test.mjs
 ## Live Widget SDK packages
 
 The integration includes three independently selectable packages built with
-`piphi-network-widget-sdk` 0.3.0:
+`piphi-network-widget-sdk` 0.5.0:
 
 - **Recently Added**: a live list from the selected server.
 - **Continue Watching**: the Plex `/hubs/continueWatching` hub, including watch

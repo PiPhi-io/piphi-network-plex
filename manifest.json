@@ -308,7 +308,7 @@
         ],
         "capability_requirements": [],
         "sdk_compatibility": {
-          "minimum": "0.3.0"
+          "minimum": "0.5.0"
         },
         "settings_schema_version": "1",
         "conformance": {
@@ -402,7 +402,7 @@
         ],
         "capability_requirements": [],
         "sdk_compatibility": {
-          "minimum": "0.3.0"
+          "minimum": "0.5.0"
         },
         "settings_schema_version": "1",
         "conformance": {
@@ -496,7 +496,7 @@
         ],
         "capability_requirements": [],
         "sdk_compatibility": {
-          "minimum": "0.3.0"
+          "minimum": "0.5.0"
         },
         "settings_schema_version": "1",
         "conformance": {
