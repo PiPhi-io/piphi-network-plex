@@ -1,9 +1,9 @@
 {
   "id": "io.piphi.plex.library-search",
   "name": "Plex Search / Library",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "entry": "./dist/widget.js",
-  "integrity": "sha384-viY/LpSOCMpTiyqRsDposVIRwQEsVD1I3GCb2g85IPHnlx4aWsEDGunk1c9QNzFn",
+  "integrity": "sha384-hDDjErmC66CrbOKjb/EpfEXeKgvoGKUwkAD8uDG2kEXOtMJb0PhsotfHiixlKBTR",
   "binding_modes": [
     "read"
   ],
@@ -12,9 +12,22 @@
   ],
   "capability_requirements": [],
   "sdk_compatibility": {
-    "minimum": "0.5.0"
+    "minimum": "0.6.1"
   },
   "settings_schema_version": "1",
+  "interaction_targets": [
+    {
+      "id": "library-search-card",
+      "label": "Plex library results",
+      "kind": "card",
+      "allowed_actions": [
+        "more-info",
+        "popout",
+        "refresh"
+      ],
+      "default_action": "more-info"
+    }
+  ],
   "conformance": {
     "accessibility": "wcag2.2-aa",
     "keyboard": true,
@@ -54,16 +67,16 @@
       "default": 8
     },
     {
-      "id": "refreshSeconds",
+      "id": "refresh-seconds",
       "type": "number",
       "label": "Refresh seconds (15–300)",
       "default": 60
     },
     {
-      "id": "showSummary",
+      "id": "show-summary",
       "type": "boolean",
-      "label": "Show summaries",
-      "default": true
+      "label": "Show one-line summaries",
+      "default": false
     },
     {
       "id": "query",
@@ -72,16 +85,16 @@
       "default": ""
     },
     {
-      "id": "collectionId",
+      "id": "collection-id",
       "type": "text",
       "label": "Library ID (used when query is empty)",
       "default": ""
     }
   ],
   "layout": {
-    "min_height": 240,
-    "default_height": 440,
-    "max_height": 800
+    "min_height": 112,
+    "default_height": 112,
+    "max_height": 220
   },
   "security": {
     "permissions": [
