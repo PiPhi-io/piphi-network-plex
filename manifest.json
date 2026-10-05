@@ -3,7 +3,7 @@
   "manifest_version": "1.0",
   "id": "piphi-network-plex",
   "name": "Plex Media Server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Browse and control one or more Plex Media Servers through PiPhi Network.",
   "metadata": {
     "generator": "piphi-network-create",
@@ -87,7 +87,7 @@
     "support_url": "https://github.com/PiPhi-io/piphi-network-plex/issues"
   },
   "license": "Apache-2.0",
-  "image": "docker.io/piphinetwork/piphi-network-plex:0.1.0",
+  "image": "docker.io/piphinetwork/piphi-network-plex:0.1.1",
   "platforms": [
     "linux"
   ],
@@ -95,7 +95,7 @@
     "linux": {
       "type": "container",
       "container": {
-        "image": "docker.io/piphinetwork/piphi-network-plex:0.1.0",
+        "image": "docker.io/piphinetwork/piphi-network-plex:0.1.1",
         "ports": [
           {
             "container": 8091,
@@ -103,7 +103,8 @@
           }
         ],
         "environment": {
-          "LOG_LEVEL": "info"
+          "LOG_LEVEL": "info",
+          "PIPHI_AUTOMATION_LEDGER_PATH": "/var/lib/piphi/automation-actions.sqlite3"
         },
         "restart_policy": {
           "name": "unless-stopped",

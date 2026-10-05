@@ -1,8 +1,9 @@
 .git
-.env
-.venv
-node_modules
-data
+.github
 .pytest_cache
-**/__pycache__
-**/*.pyc
+.venv
+__pycache__
+*.pyc
+dist
+node_modules
+tests
