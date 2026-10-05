@@ -25,6 +25,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run build
       - run: npm run validate:widgets
+      - run: npm run conformance:widgets
       - run: python scripts/check_release.py
       - run: npm test
       - run: pdm run python scripts/validate.py
