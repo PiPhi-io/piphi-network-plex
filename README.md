@@ -42,6 +42,22 @@ Provide a Plex token. Leave `host` and `base_url` empty to discover every server
 
 Tokens are retained only in Core-managed configuration and runtime memory. Provider responses, entities, state, diagnostics, and browser URLs never contain the token.
 
+### Simulator parity
+
+Set `simulation_mode` to `true` to create a deterministic Plex server without a
+Plex token. Simulation changes only the upstream transport: discovery, sessions,
+libraries, search, hubs, item resolution, artwork, and actions still pass through
+the same provider service, normalization, Core gateway, and widget bundles used
+by a live Plex server. This keeps dashboard behavior and light/dark theming
+identical between simulator and real configurations.
+
+```json
+{
+  "id": "plex-simulator",
+  "simulation_mode": true
+}
+```
+
 ## Run locally
 
 ```bash

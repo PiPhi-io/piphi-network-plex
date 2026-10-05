@@ -56,9 +56,7 @@ CONFIG_SCHEMA: dict[str, Any] = {
     "schema": {
         "title": "Piphi Network Plex Setup",
         "type": "object",
-        "required": [
-            "token"
-        ],
+        "required": [],
         "properties": {
             "host": {
                 "type": "string",
@@ -85,6 +83,11 @@ CONFIG_SCHEMA: dict[str, Any] = {
                 "type": "boolean",
                 "title": "Include shared and remote servers",
                 "default": True
+            },
+            "simulation_mode": {
+                "type": "boolean",
+                "title": "Use simulated Plex server",
+                "default": False
             }
         }
     },
@@ -104,6 +107,9 @@ CONFIG_SCHEMA: dict[str, Any] = {
         },
         "poll_interval_seconds": {
             "placeholder": "60"
+        },
+        "simulation_mode": {
+            "ui:help": "Developer mode: use deterministic libraries and playback sessions without contacting Plex."
         }
     }
 }

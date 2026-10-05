@@ -17,7 +17,7 @@
     "transcode_sessions"
   ],
   "sdk_compatibility": {
-    "minimum": "0.6.1"
+    "minimum": "0.6.0"
   },
   "interaction_targets": [
     {

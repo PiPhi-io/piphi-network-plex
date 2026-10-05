@@ -52,6 +52,7 @@ jobs:
       - name: Require committed release assets
         run: git diff --exit-code -- manifest.json widgets
       - run: npm run validate:widgets
+      - run: npm run conformance:widgets
       - run: npm test
       - name: Test installed runtime with release widget assets
         env:

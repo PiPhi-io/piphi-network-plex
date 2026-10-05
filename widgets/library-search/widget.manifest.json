@@ -12,7 +12,7 @@
   ],
   "capability_requirements": [],
   "sdk_compatibility": {
-    "minimum": "0.6.1"
+    "minimum": "0.6.0"
   },
   "settings_schema_version": "1",
   "interaction_targets": [

@@ -10,6 +10,7 @@ from piphi_runtime_kit_python import schedule_telemetry_delivery
 
 from .plex_client import PlexClient, PlexServer, normalize_collection, normalize_item
 from .schemas import DeviceConfig
+from .simulator import SimulatedPlexClient
 
 
 @dataclass(slots=True)
@@ -27,6 +28,7 @@ class PlexRuntimeService:
         self.runtime = runtime
         self.telemetry = telemetry
         self.client = client or PlexClient()
+        self.simulator_client = SimulatedPlexClient()
         self.connections: dict[str, PlexConnection] = {}
         self._lock = asyncio.Lock()
 
@@ -45,7 +47,8 @@ class PlexRuntimeService:
         if connection is None:
             raise HTTPException(status_code=404, detail="Unknown Plex configuration")
         try:
-            discovered = await self.client.discover(
+            client = self.simulator_client if connection.config.simulation_mode else self.client
+            discovered = await client.discover(
                 connection.config.token,
                 base_url=connection.config.base_url,
                 host=connection.config.host,
@@ -61,8 +64,9 @@ class PlexRuntimeService:
         sessions: list[dict[str, Any]] = []
         for server in connection.servers.values():
             try:
-                payload = await self.client.request(server, "/status/sessions")
-                for session in self.client.metadata(payload):
+                client = self._client_for_server(server)
+                payload = await client.request(server, "/status/sessions")
+                for session in client.metadata(payload):
                     user = self._first_mapping(session.get("User"))
                     player = self._first_mapping(session.get("Player"))
                     sessions.append({
@@ -144,8 +148,9 @@ class PlexRuntimeService:
 
     async def collections(self, instance_id: str) -> list[dict[str, Any]]:
         config_id, server = self.resolve_server(instance_id)
-        payload = await self.client.request(server, "/library/sections")
-        return [normalize_collection(item, config_id=config_id, server=server) for item in self.client.metadata(payload)]
+        client = self._client_for_server(server)
+        payload = await client.request(server, "/library/sections")
+        return [normalize_collection(item, config_id=config_id, server=server) for item in client.metadata(payload)]
 
     async def items(self, instance_id: str, *, collection_id: str = "", hub: str = "", query: str = "", limit: int = 50) -> list[dict[str, Any]]:
         config_id, server = self.resolve_server(instance_id)
@@ -161,18 +166,20 @@ class PlexRuntimeService:
             path, params = f"/library/sections/{collection_id}/all", {"X-Plex-Container-Size": limit}
         else:
             path, params = "/library/recentlyAdded", {"X-Plex-Container-Size": limit}
-        payload = await self.client.request(server, path, params=params)
-        raw_items = self.client.metadata(payload)
+        client = self._client_for_server(server)
+        payload = await client.request(server, path, params=params)
+        raw_items = client.metadata(payload)
         if not raw_items:
-            for hub_entry in self.client.media_container(payload).get("Hub", []):
+            for hub_entry in client.media_container(payload).get("Hub", []):
                 if isinstance(hub_entry, dict):
                     raw_items.extend(item for item in hub_entry.get("Metadata", []) if isinstance(item, dict))
         return [normalize_item(item, config_id=config_id, server=server) for item in raw_items[:limit]]
 
     async def resolve(self, instance_id: str, item_id: str) -> dict[str, Any]:
         config_id, server = self.resolve_server(instance_id)
-        payload = await self.client.request(server, f"/library/metadata/{item_id}")
-        items = self.client.metadata(payload)
+        client = self._client_for_server(server)
+        payload = await client.request(server, f"/library/metadata/{item_id}")
+        items = client.metadata(payload)
         if not items:
             raise HTTPException(status_code=404, detail="Plex media item not found")
         return normalize_item(items[0], config_id=config_id, server=server)
@@ -191,14 +198,17 @@ class PlexRuntimeService:
             raise HTTPException(status_code=400, detail=f"Unsupported Plex action: {action}")
         if action != "scan_library" and not item_id:
             raise HTTPException(status_code=422, detail="item_id is required")
-        await self.client.request(server, path, params=params)
+        await self._client_for_server(server).request(server, path, params=params)
         return {"ok": True, "action": action, "provider_instance_id": instance_id, "item_id": item_id, "collection_id": collection_id}
 
     async def asset(self, instance_id: str, path: str) -> tuple[bytes, str]:
         _config_id, server = self.resolve_server(instance_id)
         if not path.startswith("/") or ".." in path or "\\" in path:
             raise HTTPException(status_code=400, detail="Invalid Plex asset path")
-        return await self.client.bytes(server, path)
+        return await self._client_for_server(server).bytes(server, path)
+
+    def _client_for_server(self, server: PlexServer):
+        return self.simulator_client if server.base_url.startswith("simulator://") else self.client
 
     @staticmethod
     def _public_server(config_id: str, server: PlexServer) -> dict[str, Any]:
