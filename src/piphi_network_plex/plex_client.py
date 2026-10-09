@@ -7,6 +7,8 @@ from xml.etree import ElementTree
 
 import httpx
 
+from .settings import INTEGRATION_VERSION
+
 
 @dataclass(slots=True, frozen=True)
 class PlexServer:
@@ -40,7 +42,7 @@ class PlexClient:
             "X-Plex-Token": token,
             "X-Plex-Client-Identifier": "piphi-network-plex",
             "X-Plex-Product": "PiPhi Network Plex",
-            "X-Plex-Version": "0.1.0",
+            "X-Plex-Version": INTEGRATION_VERSION,
         }
 
     async def request(self, server: PlexServer, path: str, *, params: dict[str, Any] | None = None, method: str = "GET") -> dict[str, Any]:

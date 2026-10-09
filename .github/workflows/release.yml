@@ -82,6 +82,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.release.outputs.image }}
+          provenance: mode=max
+          sbom: true
       - name: Package release assets
         run: tar -czf plex-widgets.tar.gz widgets
       - name: Create reviewable prerelease
