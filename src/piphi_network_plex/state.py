@@ -137,3 +137,11 @@ def _register_automation_actions() -> None:
 
 
 _register_automation_actions()
+
+
+async def _refresh_all_state() -> None:
+    for config_id in registry.ids():
+        await plex_service.refresh(config_id)
+
+
+starter.state.provide(_refresh_all_state, source=INTEGRATION_ID)
