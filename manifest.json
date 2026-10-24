@@ -872,5 +872,8 @@
     "supports_queue": true,
     "supports_upload": false,
     "supports_mutation": true
+  },
+  "onboarding": {
+    "mode": "account"
   }
 }
